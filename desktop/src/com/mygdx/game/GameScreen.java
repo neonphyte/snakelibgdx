@@ -17,6 +17,8 @@ public class GameScreen extends ScreenAdapter {
 	private Batch batch;
 	private ShapeRenderer shape;
 	private Snake snake;
+	Controller controller;
+	Food food;
 	
 	private static final int SNAKE_SIZE = 32;
 	private static final int SNAKE_STEP = SNAKE_SIZE;
@@ -26,7 +28,9 @@ public class GameScreen extends ScreenAdapter {
 	public void show() {
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
-		snake = new Snake(32,32,2);
+		snake = new Snake(2,2);
+		controller = new Controller();
+		food = new Food(snake);
 		
 		layout = new GlyphLayout();
 		bitmapFont = new BitmapFont();
@@ -34,13 +38,17 @@ public class GameScreen extends ScreenAdapter {
 	
 	@Override
 	public void render(float delta) {
+		snake.updateDirection(controller.queryInput());
 		snake.update(delta);
+		food.updatePosition();
+		food.checkFoodCollision();
 		clearScreen();
 		
 		batch.begin();
 		//layout.setText(bitmapFont, "Hello");
 		//bitmapFont.draw(batch, layout, Gdx.graphics.getHeight() / 2 - layout.width /2,  Gdx.graphics.getHeight() /2 - layout.height /2);
-        snake.draw(batch, shape);
+        snake.draw(shape);
+        food.draw(shape);
         shape.end();
         batch.end();
 		
@@ -51,6 +59,8 @@ public class GameScreen extends ScreenAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	}
+	
+
 	
 	@Override
 	public void dispose() {

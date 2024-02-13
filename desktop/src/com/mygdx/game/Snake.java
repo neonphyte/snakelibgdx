@@ -5,16 +5,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Array;
 
 public class Snake  {
 	
 	private int x, y;
-	private int bodySize;
+	private int oldX, oldY;
 	private DIRECTION direction = DIRECTION.RIGHT;
 	private float timer;
 	private final float MOVE_TIME;
 	private final int SIZE;
 	private final int STEP;
+	private STATE state = STATE.PLAYING;
+//	private boolean directionSet = false;
+	private Array<BodyPart> bodyParts = new Array<>();
 	
 	Snake(int size, int speed) {
 		MOVE_TIME = 1f / speed;
@@ -24,6 +29,8 @@ public class Snake  {
 	}
 	
 	public void move(DIRECTION direction) {
+		this.oldX = this.x;
+		this.oldY = this.y;
 		switch (direction) {
 			case RIGHT: {
 				this.x += STEP;
@@ -46,8 +53,11 @@ public class Snake  {
 		
 	}
 	
+	// If directionSet is true, snake can go left and right instantly
 	public void updateDirection(DIRECTION newDirection) {
-		switch (newDirection) {
+		if (this.direction != newDirection) {
+			//directionSet = true;
+			switch (newDirection) {
 			case RIGHT: {
 				updateNotOpposite(newDirection, DIRECTION.LEFT);
 			}
@@ -65,6 +75,8 @@ public class Snake  {
 			}
 			break;
 		}
+		}
+		
 	}
 	
 	private void checkOutOfBounds() {
@@ -83,20 +95,33 @@ public class Snake  {
 		
 	}
 	
+	public void checkBodyCollision() {
+		for (BodyPart bodyPart : bodyParts) {
+			if (bodyPart.x == this.x && bodyPart.y == this.y) {
+				state = STATE.GAMEOVER;
+			}
+		}
+	}
+	
 	// If this.size == 0, snake can straight away change direction from left to right
 	private void updateNotOpposite(DIRECTION newDirection, DIRECTION oppDirection) {
-		if (this.direction != oppDirection || this.SIZE == 0) {
+		if (this.direction != oppDirection || bodyParts.size == 0) {
 			this.direction = newDirection; 
 		}
 	}
 	
-	public void update(float delta) {
+	public STATE update(float delta) {
 		timer -= delta;
 		if (timer <= 0) {
-			move(direction);
-			checkOutOfBounds();
 			timer = MOVE_TIME;
+			move(direction);
+			checkOutOfBounds(); 
+			updateBodyParts();
+			checkBodyCollision();
+			//directionSet = false;
+			
 		}
+		return state;
 	}
 	
 	public void draw(ShapeRenderer shape) {
@@ -110,9 +135,6 @@ public class Snake  {
 		shape.end();
 	}
 	
-	public void setDirection(DIRECTION direction) {
-		this.direction = direction;
-	}
 	
 	public int getSIZE() {
 		return this.SIZE;
@@ -125,9 +147,47 @@ public class Snake  {
 	public int getY() {
 		return this.y;
 	}
-
-
-
 	
+	public void createBodyPart(int x, int y) {
+		BodyPart bodyPart = new BodyPart();
+		bodyPart.updateBodyPart(x, y);
+		bodyParts.insert(0, bodyPart);
+	}
+	
+	public void drawBodyParts(ShapeRenderer shape) {
+		for (BodyPart bodyPart : bodyParts) {
+			bodyPart.draw(shape);
+		}
+	}
+	
+	public void updateBodyParts() {
+		if (bodyParts.size > 0) {
+			
+			BodyPart bodyPart = bodyParts.removeIndex(0);
+			bodyPart.updateBodyPart(oldX, oldY);
+			bodyParts.add(bodyPart);
+		}
+	}
+	
+	private class BodyPart {
+		int x, y;
+		
+		
+		public void updateBodyPart(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		public void draw(ShapeRenderer shape) {
+			if (!(this.x == Snake.this.x && this.y == Snake.this.y)) {
+				shape.begin(ShapeRenderer.ShapeType.Filled);
+				shape.setColor(Color.GOLD);
+				shape.rect(this.x, this.y, Snake.this.SIZE, Snake.this.SIZE);
+				shape.end();
+			}
+		}
+
+
+	}
 	
 }

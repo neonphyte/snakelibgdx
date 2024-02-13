@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 public class Controller {
-	
+		
 	public DIRECTION queryInput() {
+		// Take in key inputs
 		boolean rightKey = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 		boolean leftKey = Gdx.input.isKeyPressed(Input.Keys.LEFT);
 		boolean upKey = Gdx.input.isKeyPressed(Input.Keys.UP);
@@ -25,5 +26,7 @@ public class Controller {
 		return DIRECTION.NONE;
 
 	}
+	
+	
 
 }

@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -31,12 +32,14 @@ public class Food {
 	
 	public void checkFoodCollision() {
 		if (alive && x == snake.getX() && y == snake.getY()) {
+			snake.createBodyPart(snake.getX(), snake.getY());
 			alive = false;
 		}
 	}
 	
 	public void draw(ShapeRenderer shape) {
 		shape.begin(ShapeRenderer.ShapeType.Filled);
+		shape.setColor(Color.GREEN);
 		shape.rect(x, y, snake.getSIZE(), snake.getSIZE());
 		shape.end();
 	}

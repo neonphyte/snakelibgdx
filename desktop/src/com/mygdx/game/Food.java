@@ -9,11 +9,15 @@ public class Food {
 	private int x, y;
 	private boolean alive = false;
 	Snake snake;
+	Controller controller;
 	
-	Food(Snake snake) {
+	// Constructor for food
+	Food(Snake snake, Controller controller) {
 		this.snake = snake;
+		this.controller = controller;
 	}
 	
+	// Random spawning of food
 	public void updatePosition () {
 		boolean covered;
 		if (!alive) {
@@ -37,11 +41,16 @@ public class Food {
 		}
 	}
 	
+	// Draw food
 	public void draw(ShapeRenderer shape) {
 		shape.begin(ShapeRenderer.ShapeType.Filled);
 		shape.setColor(Color.GREEN);
 		shape.rect(x, y, snake.getSIZE(), snake.getSIZE());
 		shape.end();
+	}
+	
+	public void reset() {
+		alive = false;
 	}
 
 }

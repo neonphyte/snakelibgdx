@@ -21,6 +21,7 @@ public class Snake  {
 //	private boolean directionSet = false;
 	private Array<BodyPart> bodyParts = new Array<>();
 	
+	// Constructor for Snake Object that takes in size and speed
 	Snake(int size, int speed) {
 		MOVE_TIME = 1f / speed;
 		SIZE = 16 * size;
@@ -28,13 +29,13 @@ public class Snake  {
 		this.timer = MOVE_TIME;
 	}
 	
+	// By default w/o touching any keys, Snake will move right
 	public void move(DIRECTION direction) {
 		this.oldX = this.x;
 		this.oldY = this.y;
 		switch (direction) {
 			case RIGHT: {
 				this.x += STEP;
-				//Gdx.app.log("SnakeGame", "move right");
 				return;
 			}
 			case LEFT: {
@@ -79,22 +80,28 @@ public class Snake  {
 		
 	}
 	
+	
 	private void checkOutOfBounds() {
+		// When Snake hits the right side boundary, Snake will come out from left side boundary
 		if (x > Gdx.graphics.getWidth()) {
 			x = 0;
 		}
+		// When Snake hits the left side boundary, Snake will come out from right side boundary
 		if (x < 0) {
-			x = Gdx.graphics.getWidth();
+			x = Gdx.graphics.getWidth() - STEP;
 		}
+		// When Snake hits the top side boundary, Snake will come out from bottom side boundary
 		if (y > Gdx.graphics.getHeight()) {
 			y = 0;
 		}
+		// When Snake hits the bottom side boundary, Snake will come out from top side boundary
 		if (y < 0) {
-			y = Gdx.graphics.getHeight();
+			y = Gdx.graphics.getHeight() - STEP;
 		}
 		
 	}
 	
+	// Method to check for body collision
 	public void checkBodyCollision() {
 		for (BodyPart bodyPart : bodyParts) {
 			if (bodyPart.x == this.x && bodyPart.y == this.y) {
@@ -103,7 +110,7 @@ public class Snake  {
 		}
 	}
 	
-	// If this.size == 0, snake can straight away change direction from left to right
+	// If this.size != 0, snake can straight away change direction from left to right
 	private void updateNotOpposite(DIRECTION newDirection, DIRECTION oppDirection) {
 		if (this.direction != oppDirection || bodyParts.size == 0) {
 			this.direction = newDirection; 
@@ -146,6 +153,18 @@ public class Snake  {
 	
 	public int getY() {
 		return this.y;
+	}
+	
+	//reset()
+	public void clearBodyPart() {
+		x = 0;
+		y = 0;
+		oldX = 0;
+		oldY = 0;  	
+		bodyParts.clear();
+		timer = MOVE_TIME;
+		direction = DIRECTION.RIGHT;
+		state = STATE.PLAYING;
 	}
 	
 	public void createBodyPart(int x, int y) {

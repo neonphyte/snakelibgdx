@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 public class Controller {
 		
@@ -26,6 +27,15 @@ public class Controller {
 		return DIRECTION.NONE;
 
 	}
+	
+	public boolean checkForRestart() {
+		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+			return true;
+		}
+		return false;
+	}
+	
+
 	
 	
 

@@ -1,18 +1,22 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen extends ScreenAdapter {
 	
 	private GlyphLayout layout;
 	private BitmapFont bitmapFont;
+	private static final String GAME_OVER = "GAME OVER, Press space bar to restart!";
 	
 	private Batch batch;
 	private ShapeRenderer shape;
@@ -31,7 +35,7 @@ public class GameScreen extends ScreenAdapter {
 		shape = new ShapeRenderer();
 		snake = new Snake(2,10);
 		controller = new Controller();
-		food = new Food(snake);
+		food = new Food(snake, controller);
 		
 		layout = new GlyphLayout();
 		bitmapFont = new BitmapFont();
@@ -49,7 +53,9 @@ public class GameScreen extends ScreenAdapter {
 			}
 			break;
 			case GAMEOVER: {
-				
+				if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+					restart();
+				}
 			}
 			break;
 			
@@ -58,14 +64,30 @@ public class GameScreen extends ScreenAdapter {
 		drawScreen();
 		
 	}
+	public void restart() {
+		state = STATE.PLAYING;
+		food.reset();
+		snake.clearBodyPart();
+		}
+	
+	
 	private void drawScreen() {
 		batch.begin();
         snake.draw(shape);
         snake.drawBodyParts(shape);
         food.draw(shape);
         shape.end();
+        
+        if (state == STATE.GAMEOVER) {
+        	layout.setText(bitmapFont, GAME_OVER);
+        	bitmapFont.setColor(Color.WHITE);
+        	// Font not displaying well
+        	bitmapFont.draw(batch, GAME_OVER, Gdx.graphics.getHeight() / 2 - layout.width /2,  Gdx.graphics.getHeight() /2 - layout.height /2);
+        }
         batch.end();
 	}
+	
+
 	
 	private void clearScreen() {
 		//ScreenUtils.clear(1,0,0,1);
@@ -73,7 +95,6 @@ public class GameScreen extends ScreenAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	}
 
-	
 
 	
 	@Override

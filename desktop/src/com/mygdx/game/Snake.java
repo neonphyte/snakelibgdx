@@ -15,7 +15,7 @@ public class Snake  {
 	private DIRECTION direction = DIRECTION.RIGHT;
 	private float timer;
 	private final float MOVE_TIME;
-	private final int SIZE;
+	public final int SIZE;
 	private final int STEP;
 	private STATE state = STATE.PLAYING;
 //	private boolean directionSet = false;
@@ -175,7 +175,7 @@ public class Snake  {
 	// Create body part then update into the array
 	public void createBodyPart(int x, int y) {
 		BodyPart bodyPart = new BodyPart();
-		bodyPart.updateBodyPart(x, y);
+		bodyPart.updateBodyPart(x, y, SIZE);
 		bodyParts.insert(0, bodyPart);
 	}
 	
@@ -184,7 +184,7 @@ public class Snake  {
 		if (bodyParts.size > 0) {
 			
 			BodyPart bodyPart = bodyParts.removeIndex(0);
-			bodyPart.updateBodyPart(oldX, oldY);
+			bodyPart.updateBodyPart(oldX, oldY, SIZE);
 			bodyParts.add(bodyPart);
 		}
 	}
@@ -192,31 +192,31 @@ public class Snake  {
 	// Draw the body part using a for loop to access the array
 	public void drawBodyParts(ShapeRenderer shape) {
 		for (BodyPart bodyPart : bodyParts) {
-			bodyPart.draw(shape);
+			bodyPart.draw(shape, SIZE);
 		}
 	}
 	
 	
 	
-	private class BodyPart {
-		int x, y;
+	//private class BodyPart {
+		//int x, y;
 		
 		
-		public void updateBodyPart(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
+		//public void updateBodyPart(int x, int y) {
+		//	this.x = x;
+		//	this.y = y;
+		//}
 		
-		public void draw(ShapeRenderer shape) {
-			if (!(this.x == Snake.this.x && this.y == Snake.this.y)) {
-				shape.begin(ShapeRenderer.ShapeType.Filled);
-				shape.setColor(Color.GOLD);
-				shape.rect(this.x, this.y, Snake.this.SIZE, Snake.this.SIZE);
-				shape.end();
-			}
-		}
+		//public void draw(ShapeRenderer shape) {
+			//if (!(this.x == Snake.this.x && this.y == Snake.this.y)) {
+				//shape.begin(ShapeRenderer.ShapeType.Filled);
+				//shape.setColor(Color.GOLD);
+				//shape.rect(this.x, this.y, Snake.this.SIZE, Snake.this.SIZE);
+				//shape.end();
+			//}
+		//}
 
 
-	}
+	//}
 	
 }

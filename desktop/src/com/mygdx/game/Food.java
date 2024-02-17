@@ -17,7 +17,7 @@ public class Food {
 		this.controller = controller;
 	}
 	
-	// Random spawning of food
+	// Random spawning of food (Jordan's Part)
 	public void updatePosition () {
 		boolean covered;
 		if (!alive) {
@@ -34,6 +34,7 @@ public class Food {
 		}
 	}
 	
+	// When collide with food, it will create a body part
 	public void checkFoodCollision() {
 		if (alive && x == snake.getX() && y == snake.getY()) {
 			snake.createBodyPart(snake.getX(), snake.getY());

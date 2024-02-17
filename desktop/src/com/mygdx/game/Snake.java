@@ -117,6 +117,7 @@ public class Snake  {
 		}
 	}
 	
+	// What will happen when the state change
 	public STATE update(float delta) {
 		timer -= delta;
 		if (timer <= 0) {
@@ -131,10 +132,12 @@ public class Snake  {
 		return state;
 	}
 	
+	// Draw the head
 	public void draw(ShapeRenderer shape) {
 		drawHead(shape);
 	}
-
+	
+	// Create head, define color, and type
 	private void drawHead (ShapeRenderer shape) {
 		shape.begin(ShapeRenderer.ShapeType.Filled);
 		shape.setColor(Color.GOLD);
@@ -142,20 +145,22 @@ public class Snake  {
 		shape.end();
 	}
 	
-	
+	// Getter for SIZE
 	public int getSIZE() {
 		return this.SIZE;
 	}
 	
+	// Getter for X
 	public int getX() {
 		return this.x;
 	}
 	
+	// Getter for Y
 	public int getY() {
 		return this.y;
 	}
 	
-	//reset()
+	//Reset() the bodypart when state change from GAMEOVER to PLAYING
 	public void clearBodyPart() {
 		x = 0;
 		y = 0;
@@ -167,18 +172,14 @@ public class Snake  {
 		state = STATE.PLAYING;
 	}
 	
+	// Create body part then update into the array
 	public void createBodyPart(int x, int y) {
 		BodyPart bodyPart = new BodyPart();
 		bodyPart.updateBodyPart(x, y);
 		bodyParts.insert(0, bodyPart);
 	}
 	
-	public void drawBodyParts(ShapeRenderer shape) {
-		for (BodyPart bodyPart : bodyParts) {
-			bodyPart.draw(shape);
-		}
-	}
-	
+	// Update the body part
 	public void updateBodyParts() {
 		if (bodyParts.size > 0) {
 			
@@ -187,6 +188,15 @@ public class Snake  {
 			bodyParts.add(bodyPart);
 		}
 	}
+	
+	// Draw the body part using a for loop to access the array
+	public void drawBodyParts(ShapeRenderer shape) {
+		for (BodyPart bodyPart : bodyParts) {
+			bodyPart.draw(shape);
+		}
+	}
+	
+	
 	
 	private class BodyPart {
 		int x, y;

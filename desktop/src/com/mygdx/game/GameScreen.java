@@ -29,6 +29,7 @@ public class GameScreen extends ScreenAdapter {
 	private static final int SNAKE_STEP = SNAKE_SIZE;
 	private static final float SNAKE_SPEED = 1F;
 	
+	// Creating objects
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
@@ -41,9 +42,11 @@ public class GameScreen extends ScreenAdapter {
 		bitmapFont = new BitmapFont();
 	}
 	
+	// Constant loop, will run when the game starts
 	@Override
 	public void render(float delta) {
 		switch (state) {
+			// Default state is PLAYING
 			case PLAYING: {
 				snake.updateDirection(controller.queryInput());
 				state = snake.update(delta);
@@ -52,6 +55,7 @@ public class GameScreen extends ScreenAdapter {
 				
 			}
 			break;
+			// Space to restart the game
 			case GAMEOVER: {
 				if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 					restart();
@@ -64,13 +68,15 @@ public class GameScreen extends ScreenAdapter {
 		drawScreen();
 		
 	}
+	
+	// Restart function: change the state back to PLAYING, reset the food position, and clear the body part
 	public void restart() {
 		state = STATE.PLAYING;
 		food.reset();
 		snake.clearBodyPart();
 		}
 	
-	
+	// Draw objects like screen, snake, food
 	private void drawScreen() {
 		batch.begin();
         snake.draw(shape);
@@ -78,6 +84,7 @@ public class GameScreen extends ScreenAdapter {
         food.draw(shape);
         shape.end();
         
+        // If state = GAMEOVER, display a restart text
         if (state == STATE.GAMEOVER) {
         	layout.setText(bitmapFont, GAME_OVER);
         	bitmapFont.setColor(Color.WHITE);
@@ -88,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
 	}
 	
 
-	
+	// Clear the screen
 	private void clearScreen() {
 		//ScreenUtils.clear(1,0,0,1);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -96,7 +103,7 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 
-	
+	// Dispose batch and shape after using
 	@Override
 	public void dispose() {
 		batch.dispose();

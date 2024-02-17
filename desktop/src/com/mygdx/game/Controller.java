@@ -28,6 +28,7 @@ public class Controller {
 
 	}
 	
+	// Check for restart when hit space bar
 	public boolean checkForRestart() {
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 			return true;
